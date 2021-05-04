@@ -11,19 +11,30 @@ namespace TinyBrowser
 {
     class MyBrowser
     {
+        
+        
         public static string FindLinks(string checkString)
         {
+            List<string> LinkList = new List<string>(); 
            Regex regx = new Regex(@"\b(?:https?://|www\.)[^ \f\n\r\t\v\]]+\b",
                 RegexOptions.IgnoreCase);
-           Match match = Regex.Match(checkString, @"(?<=\<title\>).*?(?=\<\/title\>)", RegexOptions.IgnoreCase);
+           Match match = Regex.Match(checkString, @"(?<=\<title\>).*?(?=\<\/title\>)", RegexOptions.None);
            
             Console.WriteLine(match);
             foreach (Match m in regx.Matches(checkString))
             {
-                Console.WriteLine("   {0} {1}", m.Index, m.Value);
+               LinkList.Add(m.Value);
+                
             }
+
+            for (int i = 0; i < LinkList.Count; i++)
+
+                Console.WriteLine($"{i} {LinkList[i]}");
             
             return checkString;
         }
+
+      
+        
     }
 }

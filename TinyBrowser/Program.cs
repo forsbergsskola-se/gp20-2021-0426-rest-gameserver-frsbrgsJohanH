@@ -31,7 +31,11 @@ namespace TinyBrowser
             var streamReader = new StreamReader(tcpClient.GetStream());
             var result = streamReader.ReadToEnd();
 
-            MyBrowser.FindLinks(result);
+           
+            
+                MyBrowser.FindLinks(result);
+            
+            
 
         }
 
