@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -12,6 +13,8 @@ namespace TinyBrowser
     class Program
     {
 
+        
+        
 
         static void Main(string[] args)
         {
@@ -28,20 +31,19 @@ namespace TinyBrowser
             var streamReader = new StreamReader(tcpClient.GetStream());
             var result = streamReader.ReadToEnd();
 
-            Regex regx = new Regex(@"\b(?:https?://|www\.)[^ \f\n\r\t\v\]]+\b" , RegexOptions.IgnoreCase);
-
-            foreach (Match m in regx.Matches(result))
-            {
-                
-
-                Console.WriteLine("   {0} {1}", m.Index, m.Value);
-            }
+            MyBrowser.FindLinks(result);
 
         }
 
-        ///TODO Find title, Count Lines in the output instead of original string, trim of remaining <tags>
-        /// 
+
+       
+
 
     }
+
+
 }
+
+
+
 
