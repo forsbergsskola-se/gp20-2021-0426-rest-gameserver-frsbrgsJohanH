@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
@@ -10,15 +12,12 @@ using System.Text.RegularExpressions;
 namespace TinyBrowser
 {
 
+
     class Program
     {
-
-        
-        
-
         static void Main(string[] args)
         {
-
+            
             // Connect to acme.com Server via TCP on HTTP-Default-Port 80.
             var tcpClient = new TcpClient("acme.com", 80);
 
@@ -31,22 +30,27 @@ namespace TinyBrowser
             var streamReader = new StreamReader(tcpClient.GetStream());
             var result = streamReader.ReadToEnd();
 
-           
+            bool isRunning = true;
+
+
             
-                MyBrowser.FindLinks(result);
+            //Console.WriteLine(result);
+            //MyBrowser.ExtractString(result, "\">", "</a>");
+            //MyBrowser.FindLinks(result);
             
-            
+            MyBrowser.GetPageTitle(result);
+            MyBrowser.ExtractString(result);
+            MyBrowser.DisplayLinks();
+
 
         }
-
-
-       
 
 
     }
 
 
 }
+
 
 
 
