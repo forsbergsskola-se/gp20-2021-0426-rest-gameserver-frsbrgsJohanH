@@ -34,12 +34,15 @@ namespace TinyBrowser
 
 
             
+            
             //Console.WriteLine(result);
-            //MyBrowser.ExtractString(result, "\">", "</a>");
+            MyBrowser.ExtractString(result);
             //MyBrowser.FindLinks(result);
             
-            MyBrowser.GetPageTitle(result);
-            MyBrowser.ExtractString(result);
+            //MyBrowser.GetPageTitle(result);
+            //MyBrowser.GetLink(result);
+            //MyBrowser.GetTitle(result);
+            //MyBrowser.FindLink(result);
             MyBrowser.DisplayLinks();
 
 
