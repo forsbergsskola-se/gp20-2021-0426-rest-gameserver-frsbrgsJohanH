@@ -37,6 +37,7 @@ namespace TinyBrowser
 
             string titleStart = ">";
             string titleEnd = "</a>";
+           
 
             int indexStart = 0;
             int indexEnd = 0;
@@ -67,18 +68,25 @@ namespace TinyBrowser
             }
             return fromText;
         }
-        public static List<string> SearchList(List<string> list)
+        public static List<string> CleanList(List<string> list)
             {
                 for (int i = 0; i < TitleList.Count; i++)
                 {
-                    TitleList[i] = TitleList[i].Replace("<b>", " ");
-                    TitleList[i] = TitleList[i].Replace("</b>", " ");
+                    TitleList[i] = TitleList[i].Replace("<b>", "");
+                    TitleList[i] = TitleList[i].Replace("</b>", "");
+
+                    string tag = "<";
+                    
+                    if (TitleList[i].Contains(tag))
+                    {
+                        TitleList.RemoveAll(x => x.Contains("<img"));
+                    }
                 }
                 return UrlList;
             }
         public static void DisplayLinks()
         {
-            SearchList(UrlList);
+            CleanList(UrlList);
             
             for (int i = 0; i < TitleList.Count; i++)
             {
