@@ -1,15 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net.Sockets;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
-
 
 namespace TinyBrowser
-{
+{ 
     static class Link
     {
         public static string Title { get; set; }
