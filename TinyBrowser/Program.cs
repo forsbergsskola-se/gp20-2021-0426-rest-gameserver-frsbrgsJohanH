@@ -7,15 +7,23 @@ namespace TinyBrowser
     class Program
     {
         public string result;
-        
+        public static bool isRunning;
         static void Main(string[] args)
         {
             
             Start();
             MyBrowser.ExtractString(Connection.result);
             MyBrowser.DisplayLinks();
+
+            isRunning = true;
+
+            while (isRunning)
+            {
+                Connection.VisitLink();
+                
+            }
             
-            Connection.VisitLink();
+            
         }
 
         public static void Start()
