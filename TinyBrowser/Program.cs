@@ -1,9 +1,6 @@
 ﻿using System;
-using System.IO;
-using System.Net.Sockets;
-
 namespace TinyBrowser
-{
+{ 
     class Program
     {
         public string result;
@@ -21,9 +18,12 @@ namespace TinyBrowser
                 switch (userChoice)
                 {
                     case 1:
+                        MyBrowser.ClearLists();
                         Connection.Connect();
                         MyBrowser.ExtractString(Connection.result);
                         MyBrowser.DisplayLinks();
+                        
+                        
 
                         goto case 2;
                 
@@ -32,43 +32,30 @@ namespace TinyBrowser
                         Connection.VisitLink();
                         Connection.ConnectToPath();
                         MyBrowser.ExtractString(Connection.result);
+                        Console.WriteLine(Connection.result);
+                        //MyBrowser.DisplayLinks();
+                        
+                        
                         Console.WriteLine("Want to check out another page? y/n");
                         string choice = Console.ReadLine();
 
-                        if (choice == "y")
+                        if (choice.ToLower() == "y")
                         {
-                            MyBrowser.TitleList.Clear();
-                            MyBrowser.UrlList.Clear();
                             goto case 1;
+                        }
+
+                        if (choice.ToLower() == "n")
+                        {
+                            Environment.Exit(0);
                         }
                             
                         else return;
-                        
-                    
-                    
-                }
-                
-            }
-         
-           
-               
-                
-            
-            
-            
-        }
 
-        public static void Start()
-        {
-            Console.WriteLine("Acme.com Weblink Browser. Press a key to explore this ancient site...");
-            //Console.ReadKey();
-            Connection.Connect();
-            Connection.ReadResponse();
+                        break;
+                }
+            }
         }
     }
-
-
-
 }
 
 

@@ -20,7 +20,6 @@ namespace TinyBrowser
             Console.WriteLine(titleMatch);
             return checkString;
         }
-
         public static string ExtractString(string fromText)
         {
             List<string> title = TitleList;
@@ -31,7 +30,6 @@ namespace TinyBrowser
 
             string titleStart = ">";
             string titleEnd = "</a>";
-           
 
             int indexStart = 0;
             int indexEnd = 0;
@@ -87,6 +85,12 @@ namespace TinyBrowser
             {
                 Console.WriteLine($"{i + ":"} {TitleList[i] + " (" + UrlList[i] + ")"} ");
             }
+        }
+
+        public static void ClearLists()
+        {
+           TitleList.Clear();
+           UrlList.Clear();
         }
     }
 }

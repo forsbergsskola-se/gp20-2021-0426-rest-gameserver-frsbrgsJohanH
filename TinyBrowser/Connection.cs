@@ -18,27 +18,20 @@ namespace TinyBrowser
             
             public static int port = 80;
 
-
-            public static bool firstTime { get; set;}
-            
-            
             public static void Connect()
             {
-                
-               
-                    tcpClient = new TcpClient(host, port);
-                
-                    streamWriter = new StreamWriter(tcpClient.GetStream());
-                    streamWriter.AutoFlush = true;
-                    streamWriter.Write($"GET / HTTP/1.1\r\nHost: acme.com\r\n\r\n");
-                    
-                    streamReader = new StreamReader(tcpClient.GetStream());
-                    result = streamReader.ReadToEnd();
-                    tcpClient.Close();
-                    streamWriter.Close();
-                    streamReader.Close();
-                    
-                    
+                tcpClient = new TcpClient(host, port);
+
+                streamWriter = new StreamWriter(tcpClient.GetStream());
+                streamWriter.AutoFlush = true;
+                streamWriter.Write($"GET / HTTP/1.1\r\nHost: acme.com\r\n\r\n");
+
+                streamReader = new StreamReader(tcpClient.GetStream());
+                result = streamReader.ReadToEnd();
+                tcpClient.Close();
+                streamWriter.Close();
+                streamReader.Close();
+
             }
 
             public static void ConnectToPath()
@@ -52,16 +45,11 @@ namespace TinyBrowser
                 streamWriter.Write($"GET {path} HTTP/1.1\r\nHost: acme.com\r\n\r\n");
                 streamReader = new StreamReader(tcpClient.GetStream());
                 result = streamReader.ReadToEnd();
-                MyBrowser.ExtractString(result);
-               Console.WriteLine(result);
-            }
-
-            public static void ReadResponse()
-            {
-               
+                //MyBrowser.ClearLists();
                 
+                //MyBrowser.ExtractString(result);
+                //MyBrowser.DisplayLinks();
             }
-
             public static string VisitLink()
             {
                 var userInput = string.Empty;
@@ -73,29 +61,19 @@ namespace TinyBrowser
                 userInput = Console.ReadLine();
 
                 int.TryParse(userInput, out var num);
-                
-                
-                
+
                     if (num <= MyBrowser.UrlList.Count - 7)
                     {
                         path = "/" + MyBrowser.UrlList[num];
                         Console.WriteLine(path);
-                        firstTime = false;
-
+                        
                     }
                     else
                     {
                         Console.WriteLine("Bad input, try again!");
-                        
                     }
-
-                        //should return a path ----> build path to acme.com and read that response
-
-                return path;
+                    return path;
             }
-
-           
-           
     }
     
 }
