@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Net;
 using System.Net.Sockets;
 
 namespace TinyBrowser
@@ -8,28 +9,57 @@ namespace TinyBrowser
     {
             public static string path { get; set; }
        
-            public static string result;
+            public static string result { get; set;}
             public static TcpClient tcpClient;
             public static StreamWriter streamWriter;
             public static StreamReader streamReader;
 
             public static string host = "acme.com";
             
+            public static int port = 80;
+
+
+            public static bool firstTime { get; set;}
+            
             
             public static void Connect()
             {
-                tcpClient = new TcpClient(host, 80);
+                
+               
+                    tcpClient = new TcpClient(host, port);
+                
+                    streamWriter = new StreamWriter(tcpClient.GetStream());
+                    streamWriter.AutoFlush = true;
+                    streamWriter.Write($"GET / HTTP/1.1\r\nHost: acme.com\r\n\r\n");
+                    
+                    streamReader = new StreamReader(tcpClient.GetStream());
+                    result = streamReader.ReadToEnd();
+                    tcpClient.Close();
+                    streamWriter.Close();
+                    streamReader.Close();
+                    
+                    
+            }
+
+            public static void ConnectToPath()
+            {
+                tcpClient = new TcpClient(host, port);
+                
                 streamWriter = new StreamWriter(tcpClient.GetStream());
+
                 streamWriter.AutoFlush = true;
-                streamWriter.Write("GET / HTTP/1.1\r\nHost: acme.com\r\n\r\n");
                 
-                
+                streamWriter.Write($"GET {path} HTTP/1.1\r\nHost: acme.com\r\n\r\n");
+                streamReader = new StreamReader(tcpClient.GetStream());
+                result = streamReader.ReadToEnd();
+                MyBrowser.ExtractString(result);
+               Console.WriteLine(result);
             }
 
             public static void ReadResponse()
             {
-                streamReader = new StreamReader(tcpClient.GetStream());
-                result = streamReader.ReadToEnd();
+               
+                
             }
 
             public static string VisitLink()
@@ -50,7 +80,8 @@ namespace TinyBrowser
                     {
                         path = "/" + MyBrowser.UrlList[num];
                         Console.WriteLine(path);
-                        BuildLink(path);
+                        firstTime = false;
+
                     }
                     else
                     {
@@ -63,12 +94,7 @@ namespace TinyBrowser
                 return path;
             }
 
-            public static string BuildLink(string path)
-            {
-                host += path;
-
-                return host;
-            }
+           
            
     }
     

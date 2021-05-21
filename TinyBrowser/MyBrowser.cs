@@ -81,6 +81,7 @@ namespace TinyBrowser
         public static void DisplayLinks()
         {
             CleanList(UrlList);
+            GetPageTitle(Connection.result);
             
             for (int i = 0; i < TitleList.Count; i++)
             {
