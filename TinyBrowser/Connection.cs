@@ -49,6 +49,7 @@ namespace TinyBrowser
                 
                 //MyBrowser.ExtractString(result);
                 //MyBrowser.DisplayLinks();
+                MyBrowser.ClearLists();
             }
             public static string VisitLink()
             {

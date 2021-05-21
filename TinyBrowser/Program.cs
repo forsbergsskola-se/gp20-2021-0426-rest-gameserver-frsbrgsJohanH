@@ -32,6 +32,7 @@ namespace TinyBrowser
                         Connection.VisitLink();
                         Connection.ConnectToPath();
                         MyBrowser.ExtractString(Connection.result);
+                        MyBrowser.DisplayLinks();
                         Console.WriteLine(Connection.result);
                         //MyBrowser.DisplayLinks();
                         
