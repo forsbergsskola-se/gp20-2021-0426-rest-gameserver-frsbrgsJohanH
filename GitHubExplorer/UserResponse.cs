@@ -2,7 +2,9 @@
 {
     public class UserResponse
     {
-        public string name { get; set; }
-        public string job { get; set; }
+        public string login { get; set; }
+        public int id { get; set; }
+
+    
     }
 }
