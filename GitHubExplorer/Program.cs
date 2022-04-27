@@ -67,33 +67,36 @@ namespace GitHubExplorer
             public static async Task ExecuteAPICall()
             {
 
-                
+                bool isRunning = true;
                 string baseAdress = "/users/";
                 Client = new HttpClient();
                 Client.BaseAddress = new Uri("https://api.github.com");
                 Client.DefaultRequestHeaders.UserAgent.Add(new System.Net.Http.Headers.ProductInfoHeaderValue("GitHubChecker", "1.0"));
                 Client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/vnd.github.v3+json"));
                 Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue(Secret.token);
-                
-                
-                Console.WriteLine("Enter a GitHub-Username: ");
-                string userName = Console.ReadLine();
-                
-                
-                var responseUserBase = Client.GetAsync(baseAdress+userName).Result;
-                responseUserBase.EnsureSuccessStatusCode();
 
-                var content = await responseUserBase.Content.ReadAsStringAsync();
+                while (isRunning)
+                {
+                    newuser:
+                    Console.WriteLine("Enter a GitHub-Username: ");
+                    string userName = Console.ReadLine();
+                    
+                    
+                    var responseUserBase = Client.GetAsync(baseAdress+userName).Result;
+                    responseUserBase.EnsureSuccessStatusCode();
 
-               
-              User user = JsonSerializer.Deserialize<User>(content);
+                    var content = await responseUserBase.Content.ReadAsStringAsync();
+
+                   
+                    User user = JsonSerializer.Deserialize<User>(content);
 
                  
                
                  
                  Console.WriteLine(user);
                  Console.WriteLine();
-                 Console.WriteLine($"Explore {userName}'s \n[0] Followers\n[1] Stars\n[2] Repositories\n[3] Quit\n");
+                 rewind:
+                 Console.WriteLine($"Explore {userName}'s \n[0] Followers\n[1] Stars\n[2] Repositories\n[3] Explore new user\n[4] Quit");
                  
 
                   int.TryParse(Console.ReadLine(), out var choice);
@@ -114,6 +117,9 @@ namespace GitHubExplorer
                                  foreach (var follower in followers)
                                  Console.WriteLine(follower.login);
                              }
+
+                         Console.ReadLine();
+                         goto rewind;
                          break;
                      
                      case 1:
@@ -129,6 +135,8 @@ namespace GitHubExplorer
                              
                              
                          }
+                         Console.ReadLine();
+                            goto rewind;
                          break;
                      
                      case 2:
@@ -144,26 +152,20 @@ namespace GitHubExplorer
                          }
 
                          Console.ReadLine();
+                         goto rewind;
                          break;
                      
                      case 3:
+                         goto newuser;
+                     
+                     case 4:
                          Environment.Exit(0);
                          break;
-                         
-                         
-                         
-                         
-                         
-                         
-                     
-                     
-                         
-                     
-                 }
 
-
+                 } 
+                }
             }
 
         }
-    }
+}
 
