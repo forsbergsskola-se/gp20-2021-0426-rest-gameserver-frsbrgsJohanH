@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 
 namespace GitHubExplorer
 {
-    public class User
+    
+    public class UserData
     {
         public string login { get; set; }
         public int id { get; set; }
@@ -51,22 +52,17 @@ namespace GitHubExplorer
         {
             return $"{login}\n{bio}\n{blog}\n{company}\nThey created the account {created_at} and it was last updated {updated_at}";
         }
+       
     }
         class Program
         {
             private static HttpClient Client;
-        
-
             static void Main(string[] args)
             {
                 ExecuteAPICall();
             }
-
-     
-
             public static async Task ExecuteAPICall()
             {
-
                 bool isRunning = true;
                 string baseAdress = "/users/";
                 Client = new HttpClient();
@@ -80,89 +76,76 @@ namespace GitHubExplorer
                     newuser:
                     Console.WriteLine("Enter a GitHub-Username: ");
                     string userName = Console.ReadLine();
-                    
-                    
+
                     var responseUserBase = Client.GetAsync(baseAdress+userName).Result;
                     responseUserBase.EnsureSuccessStatusCode();
 
                     var content = await responseUserBase.Content.ReadAsStringAsync();
 
-                   
-                    User user = JsonSerializer.Deserialize<User>(content);
+                    UserData user = JsonSerializer.Deserialize<UserData>(content);
 
-                 
-               
-                 
-                 Console.WriteLine(user);
-                 Console.WriteLine();
-                 rewind:
-                 Console.WriteLine($"Explore {userName}'s \n[0] Followers\n[1] Stars\n[2] Repositories\n[3] Explore new user\n[4] Quit");
-                 
+                     Console.WriteLine(user);
+                     Console.WriteLine();
+                     rewind:
+                     Console.WriteLine($"Explore {userName}'s \n[0] Followers\n[1] Stars\n[2] Repositories\n[3] Explore new user\n[4] Quit");
 
-                  int.TryParse(Console.ReadLine(), out var choice);
+                     int.TryParse(Console.ReadLine(), out var choice);
 
-                 switch (choice)
-                 {
-                     case 0:
+                     switch (choice)
+                     {
+                         case 0:
+                             
+                             Console.WriteLine($"{userName} has {user.followers} followers, and is following {user.following} user/s");
+                             Console.WriteLine($"\n{userName}'s followers:");
+                             var fol = Client.GetStringAsync(user.followers_url);
+                             List<UserData> followers = JsonSerializer.Deserialize<List<UserData>>(fol.Result);
+                             
+                                 if (followers?.Any()!=true) {
+                                     Console.WriteLine($"{userName} have no followers :(");
+                                 }
+                                 else {
+                                     foreach (var follower in followers)
+                                         Console.WriteLine(follower.login);
+                                 }
+                             Console.ReadLine();
+                             goto rewind;
                         
-                         Console.WriteLine($"{userName} has {user.followers} followers, and is following {user.following} user/s");
-                         Console.WriteLine($"\n{userName}'s followers:");
-                         var fol = Client.GetStringAsync(user.followers_url);
-                         List<User> followers = JsonSerializer.Deserialize<List<User>>(fol.Result);
-                         
-                             if (followers?.Any()!=true) {
-                                 Console.WriteLine($"{userName} have no followers :(");
+                         case 1:
+                                
+                                string starredUrl = "/starred";
+                                var responseUserStarred = Client.GetAsync(baseAdress+userName+starredUrl).Result;
+                                var starContent = await responseUserStarred.Content.ReadAsStringAsync();
+                             List<UserData> userStars = JsonSerializer.Deserialize<List<UserData>>(starContent);
+                                Console.WriteLine($"{userName} have starred the following repositories:");
+                             foreach (var star in userStars) 
+                             {
+                                 Console.WriteLine($"{star.full_name}______{star.description} is currently starred {star.stargazers_count} times and forked by {star.forks_count} users");
                              }
-                             else {
-                                 foreach (var follower in followers)
-                                 Console.WriteLine(follower.login);
+                             Console.ReadLine();
+                                goto rewind;
+
+                         case 2:
+                             string reposUrl = "/repos";
+                             var responseUserRepos = Client.GetAsync(baseAdress+userName+reposUrl).Result;
+                             var repoContent = await responseUserRepos.Content.ReadAsStringAsync();
+                             List<UserData> userRepos = JsonSerializer.Deserialize<List<UserData>>(repoContent);
+                             
+                             Console.WriteLine($"The repositories of {userName}:");
+                             foreach (var repo in userRepos)
+                             {
+                                 Console.WriteLine($"{repo.name} ___ {repo.description} created {repo.created_at} ___ visit at:{repo.html_url} ");
                              }
 
-                         Console.ReadLine();
-                         goto rewind;
-                         break;
-                     
-                     case 1:
-                            
-                            string starredUrl = "/starred";
-                            var responseUserStarred = Client.GetAsync(baseAdress+userName+starredUrl).Result;
-                            var starContent = await responseUserStarred.Content.ReadAsStringAsync();
-                         List<User> userStars = JsonSerializer.Deserialize<List<User>>(starContent);
-                            Console.WriteLine($"{userName} have starred the following repositories:");
-                         foreach (var star in userStars)
-                         {
-                             Console.WriteLine($"{star.full_name}______{star.description} is currently starred {star.stargazers_count} times and forked by {star.forks_count} users");
-                             
-                             
-                         }
-                         Console.ReadLine();
-                            goto rewind;
-                         break;
-                     
-                     case 2:
-                         string reposUrl = "/repos";
-                         var responseUserRepos = Client.GetAsync(baseAdress+userName+reposUrl).Result;
-                         var repoContent = await responseUserRepos.Content.ReadAsStringAsync();
-                         List<User> userRepos = JsonSerializer.Deserialize<List<User>>(repoContent);
+                             Console.ReadLine();
+                             goto rewind;
                          
-                         Console.WriteLine($"The repositories of {userName}:");
-                         foreach (var repo in userRepos)
-                         {
-                             Console.WriteLine($"{repo.name} ___ {repo.description} created {repo.created_at} ___ visit at:{repo.html_url} ");
-                         }
-
-                         Console.ReadLine();
-                         goto rewind;
-                         break;
-                     
-                     case 3:
-                         goto newuser;
-                     
-                     case 4:
-                         Environment.Exit(0);
-                         break;
-
-                 } 
+                         case 3:
+                             goto newuser;
+                         
+                         case 4:
+                             Environment.Exit(0);
+                             break;
+                    } 
                 }
             }
 
