@@ -21,6 +21,9 @@ namespace GitHubExplorer
         public string following_url { get; set; }
         public string gists_url { get; set; }
         public string starred_url { get; set; }
+        public int stargazers_count { get; set; }
+        public int forks_count { get; set; }
+        
         public string full_name { get; set; }
         public string description { get; set; }
         public string subscriptions_url { get; set; }
@@ -35,7 +38,7 @@ namespace GitHubExplorer
         public string blog { get; set; }
         public string location { get; set; }
         public string email { get; set; }
-        public bool hireable { get; set; }
+        
         public string bio { get; set; }
         public string twitter_username { get; set; }
         public int public_repos { get; set; }
@@ -131,7 +134,7 @@ namespace GitHubExplorer
                             Console.WriteLine($"{userName} have starred the following repositories:");
                          foreach (var star in userStars)
                          {
-                             Console.WriteLine($"{star.full_name}______{star.description}");
+                             Console.WriteLine($"{star.full_name}______{star.description} is currently starred {star.stargazers_count} times and forked by {star.forks_count} users");
                              
                              
                          }
