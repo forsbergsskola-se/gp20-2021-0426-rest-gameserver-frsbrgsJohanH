@@ -49,7 +49,7 @@ namespace GitHubExplorer
         public DateTime updated_at { get; set; }
         public override string ToString()
         {
-            return $"{login}\n{bio}\n{blog}\n{company}The users account was last updated at:{updated_at}";
+            return $"{login}\n{bio}\n{blog}\n{company}\nThey created the account {created_at} and it was last updated {updated_at}";
         }
     }
         class Program
@@ -59,25 +59,15 @@ namespace GitHubExplorer
 
             static void Main(string[] args)
             {
-               
-               
                 ExecuteAPICall();
-                
-
             }
 
-            static void RequestUserNameInput()
-            {
-                Console.WriteLine("Enter a GitHub-Username: ");
-                string input = Console.ReadLine();
-            }
-            
      
 
             public static async Task ExecuteAPICall()
             {
 
-            
+                
                 string baseAdress = "/users/";
                 Client = new HttpClient();
                 Client.BaseAddress = new Uri("https://api.github.com");
@@ -85,14 +75,15 @@ namespace GitHubExplorer
                 Client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/vnd.github.v3+json"));
                 Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue(Secret.token);
                 
+                
                 Console.WriteLine("Enter a GitHub-Username: ");
                 string userName = Console.ReadLine();
                 
                 
-                var response = Client.GetAsync(baseAdress+userName).Result;
-                response.EnsureSuccessStatusCode();
+                var responseUserBase = Client.GetAsync(baseAdress+userName).Result;
+                responseUserBase.EnsureSuccessStatusCode();
 
-                var content = await response.Content.ReadAsStringAsync();
+                var content = await responseUserBase.Content.ReadAsStringAsync();
 
                
               User user = JsonSerializer.Deserialize<User>(content);
@@ -127,9 +118,9 @@ namespace GitHubExplorer
                      
                      case 1:
                             
-                            string starredurl = "/starred";
-                            var response2 = Client.GetAsync(baseAdress+userName+starredurl).Result;
-                            var starContent = await response2.Content.ReadAsStringAsync();
+                            string starredUrl = "/starred";
+                            var responseUserStarred = Client.GetAsync(baseAdress+userName+starredUrl).Result;
+                            var starContent = await responseUserStarred.Content.ReadAsStringAsync();
                          List<User> userStars = JsonSerializer.Deserialize<List<User>>(starContent);
                             Console.WriteLine($"{userName} have starred the following repositories:");
                          foreach (var star in userStars)
@@ -138,9 +129,31 @@ namespace GitHubExplorer
                              
                              
                          }
+                         break;
+                     
+                     case 2:
+                         string reposUrl = "/repos";
+                         var responseUserRepos = Client.GetAsync(baseAdress+userName+reposUrl).Result;
+                         var repoContent = await responseUserRepos.Content.ReadAsStringAsync();
+                         List<User> userRepos = JsonSerializer.Deserialize<List<User>>(repoContent);
+                         
+                         Console.WriteLine($"The repositories of {userName}:");
+                         foreach (var repo in userRepos)
+                         {
+                             Console.WriteLine($"{repo.name} ___ {repo.description} created {repo.created_at} ___ visit at:{repo.html_url} ");
+                         }
 
                          Console.ReadLine();
                          break;
+                     
+                     case 3:
+                         Environment.Exit(0);
+                         break;
+                         
+                         
+                         
+                         
+                         
                          
                      
                      
