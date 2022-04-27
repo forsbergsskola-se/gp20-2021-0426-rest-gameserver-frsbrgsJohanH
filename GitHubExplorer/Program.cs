@@ -21,6 +21,8 @@ namespace GitHubExplorer
         public string following_url { get; set; }
         public string gists_url { get; set; }
         public string starred_url { get; set; }
+        public string full_name { get; set; }
+        public string description { get; set; }
         public string subscriptions_url { get; set; }
         public string organizations_url { get; set; }
         public string repos_url { get; set; }
@@ -98,9 +100,9 @@ namespace GitHubExplorer
                  Console.WriteLine(user);
                  Console.WriteLine();
                  Console.WriteLine($"Explore {userName}'s \n[0] Followers\n[1] Stars\n[2] Repositories\n[3] Quit\n");
-                 Console.ReadLine();
+                 
 
-                 int.TryParse(Console.ReadLine(), out var choice);
+                  int.TryParse(Console.ReadLine(), out var choice);
 
                  switch (choice)
                  {
@@ -119,6 +121,24 @@ namespace GitHubExplorer
                                  Console.WriteLine(follower.login);
                              }
                          break;
+                     
+                     case 1:
+                            
+                            string starredurl = "/starred";
+                            var response2 = Client.GetAsync(baseAdress+userName+starredurl).Result;
+                            var starContent = await response2.Content.ReadAsStringAsync();
+                         List<User> userStars = JsonSerializer.Deserialize<List<User>>(starContent);
+                            Console.WriteLine($"{userName} have starred the following repositories:");
+                         foreach (var star in userStars)
+                         {
+                             Console.WriteLine($"{star.full_name}______{star.description}");
+                             
+                             
+                         }
+
+                         Console.ReadLine();
+                         break;
+                         
                      
                      
                          
